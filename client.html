@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student CRUD Client</title>
+</head>
+<body>
+  <h1>Student CRUD Operations</h1>
+  <div>
+    <h2>Create Student</h2>
+    <input type="text" id="createName" placeholder="Name">
+    <input type="number" id="createAge" placeholder="Age">
+    <button onclick="createStudent()">Create</button>
+  </div>
+  <div>
+    <h2>Get All Students</h2>
+    <button onclick="getAllStudents()">Get All Students</button>
+    <ul id="studentsList"></ul>
+  </div>
+  <script>
+    async function createStudent() {
+      const name = document.getElementById('createName').value;
+      const age = parseInt(document.getElementById('createAge').value);
+      const response = await fetch('http://localhost:3000/students', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, age }),
+      });
+      const newStudent = await response.json();
+      alert(`New student created:\nName: ${newStudent.name}\nAge: ${newStudent.age}`);
+    }
+
+    async function getAllStudents() {
+      const response = await fetch('http://localhost:3000/students');
+      const students = await response.json();
+      const studentsList = document.getElementById('studentsList');
+      studentsList.innerHTML = '';
+      students.forEach(student => {
+        const li = document.createElement('li');
+        li.textContent = `${student.name} - Age: ${student.age}`;
+        studentsList.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
